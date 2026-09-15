@@ -1,33 +1,57 @@
 import torch
 import torch.nn as nn
 
-from data import X,y
-from model import NonLinearClassifier
+from data import X, y
+from model import NonlinearClassifier
+from utils import create_initial_state
 
-model = NonLinearClassifier()
+
+# -------------------------
+# Reproducible initialization
+# -------------------------
+
+initial_state = create_initial_state()
+
+model = NonlinearClassifier()
+model.load_state_dict(initial_state)
 
 
-#loss and optimizer 
+# -------------------------
+# Loss + Optimizer
+# -------------------------
+
 loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.AdamW(
+
+optimizer = torch.optim.Adam(
     model.parameters(),
-    lr=0.01,
-    weight_decay=0.001
+    lr=0.001
 )
 
-#train
+
+# -------------------------
+# Training
+# -------------------------
 
 epochs = 100
-for epoch in range (epochs):
+
+for epoch in range(epochs):
+
+    # Forward
     logits = model(X)
-    loss=loss_fn(logits,y)
-    optimizer.zero_grad
+
+    # Loss
+    loss = loss_fn(logits, y)
+
+    # Backward + update
+    optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-    predictions = torch.argmax(logits, dim=1)
 
+    # Accuracy
+    predictions = torch.argmax(logits, dim=1)
     accuracy = (predictions == y).float().mean() * 100
 
+    # Report
     if (epoch + 1) % 10 == 0:
         print(
             f"Epoch {epoch + 1:3d} | "

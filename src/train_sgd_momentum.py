@@ -1,34 +1,58 @@
 import torch
 import torch.nn as nn
 
-from data import X,y
-from model import NonLinearClassifier
+from data import X, y
+from model import NonlinearClassifier
+from utils import create_initial_state
 
-model = NonLinearClassifier()
 
-#loss and optimizer
+# -------------------------
+# Reproducible initialization
+# -------------------------
+
+initial_state = create_initial_state()
+
+model = NonlinearClassifier()
+model.load_state_dict(initial_state)
+
+
+# -------------------------
+# Loss + Optimizer
+# -------------------------
 
 loss_fn = nn.CrossEntropyLoss()
 
 optimizer = torch.optim.SGD(
     model.parameters(),
     lr=0.1,
-    momentum = 0.9
+    momentum=0.9
 )
 
-#training
+
+# -------------------------
+# Training
+# -------------------------
 
 epochs = 100
 
-for epoch in range (epochs):
+for epoch in range(epochs):
+
+    # Forward
     logits = model(X)
-    loss = loss_fn(logits,y)
+
+    # Loss
+    loss = loss_fn(logits, y)
+
+    # Backward + update
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-    predictions = torch.argmax(logits,dim=1)
+
+    # Accuracy
+    predictions = torch.argmax(logits, dim=1)
     accuracy = (predictions == y).float().mean() * 100
 
+    # Report
     if (epoch + 1) % 10 == 0:
         print(
             f"Epoch {epoch + 1:3d} | "

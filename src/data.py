@@ -1,7 +1,7 @@
 import torch
 from sklearn.datasets import make_moons
 import matplotlib.pyplot as plt
-
+torch.manual_seed(42)
 X,y = make_moons(
     n_samples = 1000,
     noise = 0.15,

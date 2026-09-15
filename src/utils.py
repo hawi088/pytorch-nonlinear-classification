@@ -4,7 +4,7 @@ import random
 import numpy as np
 import torch
 
-from model import NonlinearClassifier
+from model import NonLinearClassifier
 
 
 SEED = 42
@@ -25,6 +25,6 @@ def set_seed(seed=SEED):
 def create_initial_state():
     set_seed()
 
-    model = NonlinearClassifier()
+    model = NonLinearClassifier()
 
     return copy.deepcopy(model.state_dict())

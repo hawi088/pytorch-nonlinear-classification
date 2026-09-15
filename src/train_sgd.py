@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from data import X, y
-from model import NonlinearClassifier
+from model import NonLinearClassifier
 from utils import create_initial_state
 
 
@@ -12,7 +12,7 @@ from utils import create_initial_state
 
 initial_state = create_initial_state()
 
-model = NonlinearClassifier()
+model = NonLinearClassifier()
 model.load_state_dict(initial_state)
 
 

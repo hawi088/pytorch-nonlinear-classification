@@ -1,6 +1,6 @@
 #Core neural network architecture
 import torch.nn as nn
-class NonLinearClass(nn.Module):
+class NonLinearClassifier(nn.Module):
     def __init__(self):
         super().__init__()
         self.layer1 = nn.Linear(2,16)

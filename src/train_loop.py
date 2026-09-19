@@ -52,6 +52,8 @@ epochs = 20
 
 for epoch in range(epochs):
     model.train()
+    total_loss = 0.0
+    total_correct = 0
     for X_batch,y_batch in train_loader:
         #Forward
         logits = model(X_batch)
@@ -61,4 +63,20 @@ for epoch in range(epochs):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-    print(f"Epoch {epoch + 1:2d} complete")
+
+        # Accumulate metrics
+        total_loss += loss.item() * X_batch.size(0)
+
+        predictions = torch.argmax(logits, dim=1)
+        total_correct += (predictions == y_batch).sum().item()
+
+
+    # Epoch metrics
+    train_loss = total_loss / len(train_dataset)
+    train_accuracy = total_correct / len(train_dataset) * 100
+
+    print(
+        f"Epoch {epoch + 1:2d} | "
+        f"Train Loss: {train_loss:.4f} | "
+        f"Train Accuracy: {train_accuracy:.2f}%"
+    )

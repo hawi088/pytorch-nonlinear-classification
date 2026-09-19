@@ -24,7 +24,7 @@ loss_fn = nn.CrossEntropyLoss()
 
 optimizer = torch.optim.AdamW(
     model.parameters(),
-    lr=0.001
+    lr=0.01
 )
 
 

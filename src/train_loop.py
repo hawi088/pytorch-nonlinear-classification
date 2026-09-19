@@ -75,8 +75,25 @@ for epoch in range(epochs):
     train_loss = total_loss / len(train_dataset)
     train_accuracy = total_correct / len(train_dataset) * 100
 
+    model.eval()
+    val_loss_total = 0.0
+    val_correct = 0
+    with torch.no_grad():
+        for X_batch, y_batch in val_loader:
+            logits = model(X_batch)
+            loss = loss_fn(logits, y_batch)
+
+            val_loss_total += loss.item() * X_batch.size(0)
+            predictions = torch.argmax(logits, dim=1)
+            val_correct += (predictions == y_batch).sum().item()
+    val_loss = val_loss_total / len(val_dataset)
+    val_accuracy = val_correct / len(val_dataset) * 100
+
     print(
         f"Epoch {epoch + 1:2d} | "
         f"Train Loss: {train_loss:.4f} | "
-        f"Train Accuracy: {train_accuracy:.2f}%"
+        f"Train Accuracy: {train_accuracy:.2f}% | "
+        f"Val Loss: {val_loss:.4f} | "
+        f"Val Accuracy: {val_accuracy:.2f}%"
     )
+
